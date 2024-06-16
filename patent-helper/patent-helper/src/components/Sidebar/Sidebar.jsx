@@ -1,45 +1,26 @@
-import {
-  LayoutOutlined,
-  CopyOutlined,
-  UsergroupDeleteOutlined,
-} from "@ant-design/icons";
-import logo from "/logo.jpg";
+import "./Sidebar.scss";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Layout, List } from "antd";
 import {
   LayoutTwoTone,
   FilterTwoTone,
-  AppstoreTwoTone,
   BulbTwoTone,
   ProjectTwoTone,
   IdcardTwoTone,
+  FileUnknownTwoTone,
 } from "@ant-design/icons";
-import { Menu } from "antd";
-import "./Sidebar.scss";
-import { useState } from "react";
-import { Layout, Row, Col } from "antd";
-import { Link } from "react-router-dom";
-import { Divider, List, Typography } from "antd";
-const data1 = [
-  {
-    icon: <LayoutTwoTone twoToneColor="#531dab" />,
-    title: "Дашборд",
-    link: "/",
-    item: "dashboard",
-  },
+
+const mainBlock = [
   {
     icon: <FilterTwoTone twoToneColor="#531dab" />,
     title: "Фильтры",
     link: "/filters",
     item: "filters",
   },
-  {
-    icon: <AppstoreTwoTone twoToneColor="#531dab" />,
-    title: "Общие данные",
-    link: "/data",
-    item: "data",
-  },
 ];
 
-const data2 = [
+const patentsBlock = [
   {
     icon: <BulbTwoTone twoToneColor="#531dab" />,
     title: "Патенты",
@@ -54,33 +35,44 @@ const data2 = [
   },
 ];
 
-const data3 = [
+const holdersBlock = [
   {
     icon: <IdcardTwoTone twoToneColor="#531dab" />,
     title: "Патентообладатели",
-    link: "/holders",
-    item: "holders",
+    link: "/persons",
+    item: "persons",
   },
   {
     icon: <ProjectTwoTone twoToneColor="#531dab" />,
     title: "Статистика",
-    link: "/holders/stat",
-    item: "holdersStat",
+    link: "/persons/stat",
+    item: "personsStat",
+  },
+];
+
+const documentationBlock = [
+  {
+    icon: <FileUnknownTwoTone twoToneColor="#531dab" />,
+    title: "Документация",
+    link: "https://docs.google.com/document/d/1VVkUlMEiL0WInEIb8PENhDT8AC1Qi9l66ny6M1IOQ7U/edit",
+    item: "data",
   },
 ];
 
 const Sidebar = () => {
-  const [active, setActive] = useState("");
+  const [active, setActive] = useState("patents");
+
   function handleClick(item) {
     setActive(item);
   }
+
   return (
     <>
-      <Layout.Sider width="25%" className="sidebar-container">
+      <Layout.Sider width="18%" className="sidebar-container">
         <List
           className="sider-block"
           header={"Главная"}
-          dataSource={data1}
+          dataSource={mainBlock}
           renderItem={(item) => (
             <List.Item
               className={
@@ -105,7 +97,7 @@ const Sidebar = () => {
         <List
           className="sider-block"
           header={"Патенты"}
-          dataSource={data2}
+          dataSource={patentsBlock}
           renderItem={(item) => (
             <List.Item
               className={
@@ -114,7 +106,7 @@ const Sidebar = () => {
               onClick={() => handleClick(item.item)}
             >
               <Link
-                to="/patents"
+                to={item.link}
                 style={{
                   textDecoration: "none",
                   width: "100%",
@@ -130,7 +122,7 @@ const Sidebar = () => {
         <List
           className="sider-block"
           header={"Патентообладатели"}
-          dataSource={data3}
+          dataSource={holdersBlock}
           renderItem={(item) => (
             <List.Item
               className={
@@ -139,7 +131,32 @@ const Sidebar = () => {
               onClick={() => handleClick(item.item)}
             >
               <Link
-                to="/users"
+                to={item.link}
+                style={{
+                  textDecoration: "none",
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <span className="li-icon">{item.icon}</span>
+                <span className="li-title">{item.title}</span>
+              </Link>
+            </List.Item>
+          )}
+        />
+        <List
+          className="sider-block"
+          header={"Документация"}
+          dataSource={documentationBlock}
+          renderItem={(item) => (
+            <List.Item
+              className={
+                item.item === active ? "sider-item active" : "sider-item"
+              }
+              onClick={() => handleClick(item.item)}
+            >
+              <Link
+                to={item.link}
                 style={{
                   textDecoration: "none",
                   width: "100%",

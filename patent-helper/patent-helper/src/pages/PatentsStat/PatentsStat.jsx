@@ -1,19 +1,18 @@
-import "./SinglePatent.scss";
+import "./PatentsStat.scss";
 import { Layout } from "antd";
 import Header from "../../components/Header/Header";
 import Sidebar from "../../components/Sidebar/Sidebar";
-import Footer from "../../components/Footer/Footer";
 import Content from "../../components/Content/Content";
-import Patent from "../../components/Patent/Patent";
+import Footer from "../../components/Footer/Footer";
+import PatentStat from "../../components/PatentStat/PatentStat";
 
-
-const SinglePatent = () => (
+const PatentsStat = () => (
   <Layout className="layout-container">
     <Header />
     <Layout className="layout-content">
       <Sidebar />
-      <Content component={<Patent />} />
+      <Content component={<PatentStat />} />
     </Layout>
   </Layout>
 );
-export default SinglePatent;
+export default PatentsStat;

@@ -13,7 +13,6 @@ const Main = () => (
       <Sidebar />
       дашборд
     </Layout>
-    <Footer />
   </Layout>
 );
 export default Main;

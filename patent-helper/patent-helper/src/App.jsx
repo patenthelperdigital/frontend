@@ -1,8 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Main from "./pages/Main/Main";
 import Patents from "./pages/Patents/Patents"
+import Holders from "./pages/Holders/Holders";
 import SinglePatent from "./pages/SinglePatent/SinglePatent";
+import SingleHolder from "./pages/SingleHolder/SingleHolder";
 import Filters from "./pages/Filters/Filters";
+import PatentsStat from "./pages/PatentsStat/PatentsStat";
 import {
 
   ConfigProvider,
@@ -58,25 +61,23 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/">
-              <Route index element={<Main />} />
+              <Route index element={<Patents />} />
               <Route path="filters" element={<Filters />} />
               <Route path="patents">
                 <Route index element={<Patents />} />
-                <Route
-                  path=":patent_kind:patent_reg_number"
-                  element={<SinglePatent />}
-                />
+                <Route path=":stat" element={<PatentsStat />} />
               </Route>
-              {/* <Route path="holders">
+              <Route path="patent">
+                <Route path=":patent_kind">
+                  <Route path=":patent_reg_number" element={<SinglePatent />} />
+                </Route>
+              </Route>
+              <Route path="persons">
                 <Route index element={<Holders />} />
-                <Route
-                  path=":patent_kind:patent_reg_number"
-                  element={<SingleHolder />}
-                />
-              </Route> */}
-              {/* <Route path="analytics">
-                <Route index element={<Dashboard />} />
-              </Route> */}
+                <Route path=":person_tax_number" element={<SingleHolder />} />
+                {/* <Route path=":stat" element={<HoldersStat />} />
+                 */}
+              </Route>
             </Route>
           </Routes>
         </BrowserRouter>

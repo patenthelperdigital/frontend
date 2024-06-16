@@ -13,7 +13,6 @@ const Patents = () => (
       <Sidebar />
       <Content component={<PatentsTable />} />
     </Layout>
-    <Footer />
   </Layout>
 );
 export default Patents;

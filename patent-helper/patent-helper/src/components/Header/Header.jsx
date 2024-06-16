@@ -7,12 +7,12 @@ function Header() {
   return (
     <Layout.Header className="header-container">
       <Row>
-        <Col span={6}>
+        <Col span={4}>
           <Row className="logo" justify="center">
             <div className="logo-title">PHD</div>
           </Row>
         </Col>
-        <Col span={11} className="upload-btn">
+        <Col span={13} className="upload-btn">
             <Button icon={<UploadOutlined />}>Расширить базу патентов</Button>
         </Col>
         <Col span={6} className="mode-toggler">

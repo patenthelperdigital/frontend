@@ -1,5 +1,5 @@
-import "./PatentsTable.scss";
-import { Table, Tag, Card, Alert, Space } from "antd";
+import "./HoldersTable.scss";
+import { Table, Tag, Card, Alert, Space, Select, Row, Col } from "antd";
 import { useState, useEffect } from "react";
 import qs from "qs";
 import { Link } from "react-router-dom";
@@ -12,16 +12,12 @@ const getKindTag = (id) => {
   const tag = { title: "", color: "" };
   switch (id) {
     case 1:
-      tag.title = "Изобретение";
+      tag.title = "Юридическое лицо";
       tag.color = "cyan";
       break;
-    case 2:
-      tag.title = "Полезная модель";
-      tag.color = "geekblue";
-      break;
     default:
-      tag.title = "Промышленный образец";
-      tag.color = "purple";
+      tag.title = "Физическое лицо";
+      tag.color = "geekblue";
       break;
   }
   return tag;
@@ -29,36 +25,35 @@ const getKindTag = (id) => {
 
 const columns = [
   {
+    title: "ИНН",
+    dataIndex: "tax_number",
+  },
+  {
     title: "Название",
-    dataIndex: "name",
-    width: "20%",
+    dataIndex: "short_name",
     render: (name) => {
-      return (
-        <span className="patent-name">
-          {name.substring(0, 1).toUpperCase() + name.slice(1).toLowerCase()}
-        </span>
-      );
+      return <span className="patent-name">{name}</span>;
     },
   },
   {
     dataIndex: "kind",
     width: "10%",
     align: "center",
-    filters: [
-      {
-        text: "Изобретение",
-        value: 1,
-      },
-      {
-        text: "Полезная модель",
-        value: 2,
-      },
-      {
-        text: "Промышленный образец",
-        value: 3,
-      },
-    ],
-    filterMultiple: false,
+    // filters: [
+    //   {
+    //     text: "Изобретение",
+    //     value: 1,
+    //   },
+    //   {
+    //     text: "Полезная модель",
+    //     value: 2,
+    //   },
+    //   {
+    //     text: "Промышленный образец",
+    //     value: 3,
+    //   },
+    // ],
+    // filterMultiple: false,
     render: (tag) => {
       const { title, color } = getKindTag(tag);
       return (
@@ -75,52 +70,38 @@ const columns = [
     },
   },
   {
-    title: "Авторы",
-    width: "20%",
-    dataIndex: "author_raw",
-    render: (author) => <pre key={author}>{author}</pre>,
-  },
-  {
-    title: "Патентообладатели",
-    width: "20%",
-    dataIndex: "patent_holders",
-    render: (holders) => {
-      <>
-        {holders.map((holder) => {
-          return (
-            <Card
-              size="small"
-              extra={<a href="#">{"ИНН " + holder.tax_number}</a>}
-            >
-              <p>{holder.full_name}</p>
-            </Card>
-          );
-        })}
-      </>;
+    title: "Категория",
+    dataIndex: "category",
+    render: (cat) => {
+      return <span className="patent-name">{cat}</span>;
     },
   },
   {
     title: "Дата регистрации",
-    align: "center",
-    width: "10%",
     dataIndex: "reg_date",
+    align: "center",
   },
   {
-    title: "Актуальность",
-    width: "10%",
-    dataIndex: "actual",
+    title: "Количество патентов",
     align: "center",
-    filters: [
-      {
-        text: "Истек",
-        value: false,
-      },
-      {
-        text: "Действует",
-        value: true,
-      },
-    ],
-    filterMultiple: false,
+    dataIndex: "patent_count",
+  },
+
+  {
+    title: "Активна",
+    dataIndex: "active",
+    align: "center",
+    // filters: [
+    //   {
+    //     text: "Истек",
+    //     value: false,
+    //   },
+    //   {
+    //     text: "Действует",
+    //     value: true,
+    //   },
+    // ],
+    // filterMultiple: false,
     render: (actual) =>
       actual ? (
         <Tag color="green" key={actual} className="actual-tag">
@@ -134,12 +115,11 @@ const columns = [
   },
   {
     key: "operation",
-    width: "10%",
     align: "center",
-    render: ({ kind, reg_number }) => {
+    render: ({ tax_number }) => {
       return (
-        <Link to={`/patent/${kind}/${reg_number}`}>
-          <Tag color="geekblue" key={kind + reg_number} className="action-tag">
+        <Link to={`/persons/${tax_number}`}>
+          <Tag color="geekblue" key={'p' + tax_number} className="action-tag">
             <i>Просмотр</i>
           </Tag>
         </Link>
@@ -148,9 +128,10 @@ const columns = [
   },
 ];
 
-const PatentsTable = () => {
+const HoldersTable = () => {
   const [data, setData] = useState();
-  
+  const [filterOptions, setFilterOptions] = useState();
+const [filterOptionsLoading, setFilterOptionsLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -161,7 +142,7 @@ const PatentsTable = () => {
 
   const fetchData = () => {
     setLoading(true);
-    let filterString = '';
+    let filterString = "";
     if (tableParams.filters?.actual) {
       filterString += `&actual=${tableParams.filters.actual}`;
     }
@@ -169,7 +150,7 @@ const PatentsTable = () => {
       filterString += `&kind=${tableParams.filters.kind[0]}`;
     }
     fetch(
-      `http://backend.patenthelper.digital/patents?${qs.stringify(
+      `http://backend.patenthelper.digital/persons?${qs.stringify(
         getParams(tableParams)
       )}${filterString}`,
       {
@@ -193,7 +174,7 @@ const PatentsTable = () => {
     fetchData();
   }, [tableParams.pagination?.current, tableParams.pagination?.pageSize]);
   const handleTableChange = (pagination, filters, sorter) => {
-    console.log(filters)
+    console.log(filters);
     setTableParams({
       pagination,
       filters,
@@ -204,13 +185,54 @@ const PatentsTable = () => {
       setData([]);
     }
   };
+  const selectFilterOption = (input, option) =>
+    (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+
+  const onSelectFilterChange = (value) => {
+    console.log(`selected ${value}`);
+  };
+  const onSelectFilterSearch = (value) => {
+    console.log("search:", value);
+  };
+  const fetchFilterOptions = () => {
+     fetch(`http://backend.patenthelper.digital/filters`, {
+       method: "GET",
+     })
+       .then((res) => res.json())
+       .then((data) => {
+        setFilterOptions(data.map((fil) => {
+          return {
+            value: fil.id,
+            label: fil.name
+          }
+        }))
+        setFilterOptionsLoading(false)
+       });
+  }
+  useEffect(() => {
+    fetchFilterOptions();
+  }, []);
   return (
     <>
+      <Row>
+        <Col sm={6}>
+          <Select
+            showSearch
+            placeholder="Выберите фильтр"
+            optionFilterProp="children"
+            onChange={onSelectFilterChange}
+            onSearch={onSelectFilterSearch}
+            filterOption={selectFilterOption}
+            options={filterOptions}
+            loading={filterOptionsLoading}
+          />
+        </Col>
+      </Row>
       <Table
         scroll={{
           y: 640,
         }}
-        title={() => <span className="header">Патенты</span>}
+        title={() => <span className="header">Патентообладатели</span>}
         className="patent-table"
         columns={columns}
         dataSource={data}
@@ -223,4 +245,4 @@ const PatentsTable = () => {
   );
 };
 
-export default PatentsTable;
+export default HoldersTable;

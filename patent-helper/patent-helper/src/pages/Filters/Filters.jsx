@@ -13,7 +13,6 @@ const Filters = () => (
       <Sidebar />
       <Content component={<FiltersTable />} />
     </Layout>
-    <Footer />
   </Layout>
 );
 export default Filters;
