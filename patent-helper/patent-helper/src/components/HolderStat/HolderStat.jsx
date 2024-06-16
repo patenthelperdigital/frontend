@@ -7,10 +7,10 @@ import {
 } from "@ant-design/icons";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
-import "./PatentStat.scss";
+import "./HolderStat.scss";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-const PatentStat = () => {
+const HolderStat = () => {
   const [data, setData] = useState();
   const [loading, setLoading] = useState(true);
 
@@ -26,23 +26,27 @@ const PatentStat = () => {
       .then((data) => {
         console.log(data);
         setLoading(false);
-        if (data) {
-          setData(data);
-        } else {
-          setData({
-            total_patents: 1137668,
-            total_ru_patents: 865156,
-            total_with_holders: 730299,
-            total_ru_with_holders: 728998,
-            with_holders_percent: 64,
-            ru_with_holders_percent: 84,
-            by_author_count: {
-              1: 347817,
-              "2–5": 644826,
-              "5+": 145025,
-            },
-          });
-        }
+        setData({
+          total_patents: 1137668,
+          total_ru_patents: 865156,
+          total_with_holders: 730299,
+          total_ru_with_holders: 728998,
+          with_holders_percent: 64,
+          ru_with_holders_percent: 84,
+          by_author_count: {
+            1: 347817,
+            "2–5": 644826,
+            "5+": 145025,
+          },
+        });
+        //   setLoading(false);
+        //   setTableParams({
+        //     ...tableParams,
+        //     pagination: {
+        //       ...tableParams.pagination,
+        //       total: data.total,
+        //     },
+        //   });
       });
   };
   useEffect(() => {
@@ -192,4 +196,4 @@ const PatentStat = () => {
   );
 };
 
-export default PatentStat;
+export default HolderStat;

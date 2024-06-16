@@ -6,6 +6,7 @@ import SinglePatent from "./pages/SinglePatent/SinglePatent";
 import SingleHolder from "./pages/SingleHolder/SingleHolder";
 import Filters from "./pages/Filters/Filters";
 import PatentsStat from "./pages/PatentsStat/PatentsStat";
+import HoldersStat from "./pages/HoldersStat/HoldersStat";
 import {
 
   ConfigProvider,
@@ -75,8 +76,8 @@ function App() {
               <Route path="persons">
                 <Route index element={<Holders />} />
                 <Route path=":person_tax_number" element={<SingleHolder />} />
-                {/* <Route path=":stat" element={<HoldersStat />} />
-                 */}
+                <Route path=":stat" element={<HoldersStat />} />
+                
               </Route>
             </Route>
           </Routes>

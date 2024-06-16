@@ -1,5 +1,5 @@
 import "./PatentsTable.scss";
-import { Table, Tag, Card, Alert, Space } from "antd";
+import { Table, Tag, Card, Alert, Space, Row, Col, Select, Button } from "antd";
 import { useState, useEffect } from "react";
 import qs from "qs";
 import { Link } from "react-router-dom";
@@ -82,6 +82,7 @@ const columns = [
   },
   {
     title: "Патентообладатели",
+    hidden: true,
     width: "20%",
     dataIndex: "patent_holders",
     render: (holders) => {
@@ -150,8 +151,12 @@ const columns = [
 
 const PatentsTable = () => {
   const [data, setData] = useState();
-  
+    const [filterOptions, setFilterOptions] = useState();
+    const [filterOptionsLoading, setFilterOptionsLoading] = useState(true);
   const [loading, setLoading] = useState(false);
+  
+  const [filters, setFilters] = useState();
+  const [filterFile, setFilterFile] = useState();
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
@@ -161,17 +166,11 @@ const PatentsTable = () => {
 
   const fetchData = () => {
     setLoading(true);
-    let filterString = '';
-    if (tableParams.filters?.actual) {
-      filterString += `&actual=${tableParams.filters.actual}`;
-    }
-    if (tableParams.filters?.kind) {
-      filterString += `&kind=${tableParams.filters.kind[0]}`;
-    }
+    
     fetch(
       `http://backend.patenthelper.digital/patents?${qs.stringify(
         getParams(tableParams)
-      )}${filterString}`,
+      )}`,
       {
         method: "GET",
       }
@@ -193,7 +192,7 @@ const PatentsTable = () => {
     fetchData();
   }, [tableParams.pagination?.current, tableParams.pagination?.pageSize]);
   const handleTableChange = (pagination, filters, sorter) => {
-    console.log(filters)
+    setFilters(filters)
     setTableParams({
       pagination,
       filters,
@@ -204,13 +203,204 @@ const PatentsTable = () => {
       setData([]);
     }
   };
+    const selectFilterOption = (input, option) =>
+      (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+
+    const onSelectFilterChange = (value) => {
+      setFilterFile(value)
+      console.log(`selected ${value}`);
+    };
+    const onSelectFilterSearch = (value) => {
+      console.log("search:", value);
+    };
+    const fetchFilterOptions = () => {
+      fetch(`http://backend.patenthelper.digital/filters`, {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setFilterOptions(
+            data.map((fil) => {
+              return {
+                value: fil.id,
+                label: fil.name,
+              };
+            })
+          );
+          setFilterOptionsLoading(false);
+        });
+    };
+    useEffect(() => {
+      fetchFilterOptions();
+    }, []);
+    const fetchFilteredData = () => {
+      let filterString = "";
+
+      if (filterFile && filterFile.length !== 0) {
+        filterString += `&filter_id=${filterFile[0]}`;
+      }
+
+      if (filters && filters.kind) {
+        filterString += `&kind=${filters.kind[0]}`;
+      }
+      if (filters && filters.actual) {
+        filterString += `&actual=${filters.actual[0]}`;
+      }
+      console.log(filterString);
+       fetch(
+         `http://backend.patenthelper.digital/patents?${qs.stringify(
+           getParams(tableParams)
+         )}${filterString}`,
+         {
+           method: "GET",
+         }
+       )
+         .then((res) => res.json())
+         .then((data) => {
+          console.log(data)
+          
+           setData(data.items);
+           setLoading(false);
+           setTableParams({
+             ...tableParams,
+             pagination: {
+               ...tableParams.pagination,
+               total: data.total,
+             },
+           });
+         });
+      console.log(filters, filterFile);
+      // fetch(`http://backend.patenthelper.digital/filters`, {
+      //   method: "GET",
+      // })
+      //   .then((res) => res.json())
+      //   .then((data) => {
+      //     setFilterOptions(
+      //       data.map((fil) => {
+      //         return {
+      //           value: fil.id,
+      //           label: fil.name,
+      //         };
+      //       })
+      //     );
+      //     setFilterOptionsLoading(false);
+      //   });
+    };
+      const fetchExport = () => {
+        let filterString = "";
+
+        if (filterFile && filterFile.length !== 0) {
+          if (filterString.length === 0 ){
+            filterString += `filter_id=${filterFile[0]}`;
+          } else {
+            filterString += `&filter_id=${filterFile[0]}`;
+          }
+          
+        }
+
+        if (filters && filters.kind) {
+                    if (filterString.length === 0) {
+                      filterString += `kind=${filters.kind[0]}`;;
+                    } else {
+                      filterString += `&kind=${filters.kind[0]}`;
+                    }
+          
+        }
+        if (filters && filters.actual) {
+          if (filterString.length === 0) {
+            filterString += `actual=${filters.actual[0]}`;
+          } else {
+            filterString += `&actual=${filters.actual[0]}`;
+          }
+          
+        }
+        console.log(filterString);
+        fetch(
+          `http://backend.patenthelper.digital/patents/export?${filterString}`,
+          {
+            method: "GET",
+          }
+        )
+          .then((res) => {
+            console.log(res.body)
+            res.body
+      })
+          
+          .then((data) => {
+            console.log(data);
+
+            // setData(data.items);
+            // setLoading(false);
+            // setTableParams({
+            //   ...tableParams,
+            //   pagination: {
+            //     ...tableParams.pagination,
+            //     total: data.total,
+            //   },
+            // });
+          });
+        console.log(filters, filterFile);
+        // fetch(`http://backend.patenthelper.digital/filters`, {
+        //   method: "GET",
+        // })
+        //   .then((res) => res.json())
+        //   .then((data) => {
+        //     setFilterOptions(
+        //       data.map((fil) => {
+        //         return {
+        //           value: fil.id,
+        //           label: fil.name,
+        //         };
+        //       })
+        //     );
+        //     setFilterOptionsLoading(false);
+        //   });
+      };
+
   return (
-    <>
+    <div className="table-container">
       <Table
         scroll={{
-          y: 640,
+          y: 840,
         }}
-        title={() => <span className="header">Патенты</span>}
+        title={() => (
+          <div className="form-container">
+            <div >
+              <Select
+                showSearch
+                placeholder="Выберите фильтр"
+                optionFilterProp="children"
+                onChange={onSelectFilterChange}
+                onSearch={onSelectFilterSearch}
+                filterOption={selectFilterOption}
+                options={filterOptions}
+                loading={filterOptionsLoading}
+           
+                mode="tags"
+                maxCount={1}
+                style={{
+                  width: "300px",
+                }}
+              />
+              <Button
+                style={{
+                  marginLeft: "1rem",
+                }}
+                onClick={fetchFilteredData}
+              >
+                Фильтровать
+              </Button>
+            </div>
+            <Button
+              style={{
+                alignSelf: "right",
+              }}
+              onClick={fetchExport}
+            >
+              Выгрузить результат
+            </Button>
+          </div>
+        )}
         className="patent-table"
         columns={columns}
         dataSource={data}
@@ -219,7 +409,7 @@ const PatentsTable = () => {
         loading={loading}
         onChange={handleTableChange}
       />
-    </>
+    </div>
   );
 };
 

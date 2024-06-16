@@ -1,5 +1,5 @@
 import "./HoldersTable.scss";
-import { Table, Tag, Card, Alert, Space, Select, Row, Col } from "antd";
+import { Table, Tag, Card, Alert, Space, Select, Row, Col, Button } from "antd";
 import { useState, useEffect } from "react";
 import qs from "qs";
 import { Link } from "react-router-dom";
@@ -130,6 +130,8 @@ const columns = [
 
 const HoldersTable = () => {
   const [data, setData] = useState();
+   const [filters, setFilters] = useState();
+   const [filterFile, setFilterFile] = useState();
   const [filterOptions, setFilterOptions] = useState();
 const [filterOptionsLoading, setFilterOptionsLoading] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -214,25 +216,49 @@ const [filterOptionsLoading, setFilterOptionsLoading] = useState(true);
   }, []);
   return (
     <>
-      <Row>
-        <Col sm={6}>
-          <Select
-            showSearch
-            placeholder="Выберите фильтр"
-            optionFilterProp="children"
-            onChange={onSelectFilterChange}
-            onSearch={onSelectFilterSearch}
-            filterOption={selectFilterOption}
-            options={filterOptions}
-            loading={filterOptionsLoading}
-          />
-        </Col>
-      </Row>
       <Table
         scroll={{
           y: 640,
         }}
-        title={() => <span className="header">Патентообладатели</span>}
+        title={() => (
+          <div className="form-container">
+            <div>
+              <Select
+                showSearch
+                placeholder="Выберите фильтр"
+                optionFilterProp="children"
+                onChange={onSelectFilterChange}
+                onSearch={onSelectFilterSearch}
+                filterOption={selectFilterOption}
+                options={filterOptions}
+                loading={filterOptionsLoading}
+                mode="tags"
+                maxCount={1}
+                style={{
+                  width: "300px",
+                }}
+              />
+              <Button
+                style={{
+                  marginLeft: "1rem",
+                }}
+                onClick={() => console.log("click")}
+                disabled={true}
+              >
+                Фильтровать
+              </Button>
+            </div>
+            <Button
+              style={{
+                alignSelf: "right",
+              }}
+              disabled={true}
+              onClick={() => console.log("click")}
+            >
+              Выгрузить результат
+            </Button>
+          </div>
+        )}
         className="patent-table"
         columns={columns}
         dataSource={data}

@@ -54,13 +54,13 @@ const documentationBlock = [
   {
     icon: <FileUnknownTwoTone twoToneColor="#531dab" />,
     title: "Документация",
-    link: "https://docs.google.com/document/d/1VVkUlMEiL0WInEIb8PENhDT8AC1Qi9l66ny6M1IOQ7U/edit",
+    link: "https://disk.yandex.ru/i/YEnn3CrrqVMByg",
     item: "data",
   },
 ];
 
 const Sidebar = () => {
-  const [active, setActive] = useState("patents");
+  const [active, setActive] = useState();
 
   function handleClick(item) {
     setActive(item);

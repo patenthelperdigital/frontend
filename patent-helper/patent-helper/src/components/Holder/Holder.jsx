@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "./Holder.scss";
 import {
 
-  Descriptions,
+  Descriptions,Spin
 
 } from "antd";
 import { useParams } from "react-router-dom";
@@ -10,20 +10,48 @@ import { useParams } from "react-router-dom";
 import { Table, Tag, Col, Row } from "antd";
 
 import { Link } from "react-router-dom";
+const getFirstKindTag = (id) => {
+  const tag = { title: "", color: "" };
+  switch (id) {
+    case 1:
+      tag.title = "ВУЗ";
+      tag.color = "magenta";
+      break;
+    case 2:
+      tag.title = "Высокотехнологичные ИТ компании";
+      tag.color = "geekblue";
+      break;
+    case 2:
+      tag.title = "Колледжи";
+      tag.color = "volcano";
+      break;
+    case 3:
+      tag.title = "Научные организации";
+      tag.color = "gold";
+      break;
+    default:
+      tag.title = "Прочие организации";
+      tag.color = "cyan";
+      break;
+  }
+  
+  return (
+    <Tag color={tag.color}>
+      <p>{tag.title}</p>
+    </Tag>
+  );
+};
+
 const getKindTag = (id) => {
   const tag = { title: "", color: "" };
   switch (id) {
     case 1:
-      tag.title = "Изобретение";
+      tag.title = "Юридическое лицо";
       tag.color = "cyan";
       break;
-    case 2:
-      tag.title = "Полезная модель";
-      tag.color = "geekblue";
-      break;
     default:
-      tag.title = "Промышленный образец";
-      tag.color = "purple";
+      tag.title = "Физическое лицо";
+      tag.color = "geekblue";
       break;
   }
   return tag;
@@ -40,6 +68,7 @@ const getKindTag = (id) => {
 // "category": "Прочие организации",
 // "patents": [],
 // "patent_count": 1473
+
 
 const Patent = () => {
   const params = useParams();
@@ -75,7 +104,7 @@ const Patent = () => {
           {
             key: "3",
             label: "Тип",
-            children: data.kind,
+            children: getFirstKindTag(data.kind),
           },
           {
             key: "4",
@@ -91,7 +120,11 @@ const Patent = () => {
           {
             key: "6",
             label: "Активность",
-            children: data.active,
+            children: (
+              <Tag color={data.active ? "green" : "red"} className="tag">
+                <p>{data.active ? "Действует" : "Просрочен"}</p>
+              </Tag>
+            ),
           },
           {
             key: "7",
@@ -118,14 +151,20 @@ const Patent = () => {
   useEffect(() => {
     fetchData();
   }, []);
-  if (loading) {
-    return <>False</>;
-  }
+   if (loading) {
+     return (
+       <Row style={{ height: "100vh" }} justify="center">
+         <Col span={24}>
+           <Spin></Spin>
+         </Col>
+       </Row>
+     );
+   }
   const columns = [
     {
       title: "Тип",
       dataIndex: "kind",
-      width: "10%",
+      width: "30%",
       align: "center",
 
       render: (tag) => {
@@ -147,12 +186,14 @@ const Patent = () => {
     },
     {
       title: "Номер",
-      dataIndex: "req_number",
-      key: "req_number",
+      dataIndex: "reg_number",
+      key: "reg_number",
+      width: "30%",
     },
     {
       key: "operation",
       align: "center",
+      width: "40%",
       render: ({ kind, reg_number }) => {
         return (
           <Link to={`/patent/${kind}/${reg_number}`}>
@@ -168,6 +209,7 @@ const Patent = () => {
       },
     },
   ];
+
   return (
     // <div>
     //   <Row>
@@ -198,25 +240,30 @@ const Patent = () => {
     //     <Col span={12}>col-12</Col>
     //   </Row>
     // </div>
-    <Row>
-      <Col span={12}>
-        <Descriptions
-          title={`${data.short_name}`}
-          items={processedData}
-          column={2}
-        />
-      </Col>
-      <Col span={12}>
-        <Table
-          title={() => <strong>Общее количество патентов {table.count}</strong>}
-          columns={columns}
-          dataSource={table.table}
-          pagination={{
-            position: ["none"],
-          }}
-        />
-      </Col>
-    </Row>
+
+    <div className="holder-container">
+      <Row>
+        <Col span={12}>
+          <Descriptions
+            title={`${data.short_name}`}
+            items={processedData}
+            column={1}
+          />
+        </Col>
+        <Col span={12}>
+          <Table
+            title={() => (
+              <strong>Общее количество патентов {table.count}</strong>
+            )}
+            columns={columns}
+            dataSource={table.table}
+            pagination={{
+              position: ["none"],
+            }}
+          />
+        </Col>
+      </Row>
+    </div>
   );
 };
 

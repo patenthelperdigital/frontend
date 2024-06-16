@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './Patent.scss'
-import { List, Col, Row, Button, Space, Switch, Descriptions, Card, Collapse } from "antd";
+import { List, Col, Row, Button, Space, Switch, Descriptions, Card, Collapse, Spin, Tag } from "antd";
 import { useParams } from 'react-router-dom';
 
 
@@ -29,38 +29,6 @@ const Patent = () => {
   const [loading, setLoading] = useState(true);
   const [processedData, setProcessedData] = useState();
   const [holders, setHolders] = useState();
-    const items = [
-      {
-        key: "1",
-        label: "Название",
-        children: "Cloud Database",
-      },
-      {
-        key: "2",
-        label: "Тип",
-        children: "Prepaid",
-      },
-      {
-        key: "3",
-        label: "Time",
-        children: "18:00:00",
-      },
-      {
-        key: "4",
-        label: "Amount",
-        children: "$80.00",
-      },
-      {
-        key: "5",
-        label: "Discount",
-        children: "$20.00",
-      },
-      {
-        key: "6",
-        label: "Official",
-        children: "$60.00",
-      },
-    ];
 
   const fetchData = () => {
     setLoading(true);
@@ -84,12 +52,35 @@ const Patent = () => {
           {
             key: "3",
             label: "Актуальность",
-            children: data.actual,
+            children: (
+              <Tag color={data.actual ? "green" : "red"} className="tag">
+                <p>{data.actual ? "Действует" : "Просрочен"}</p>
+              </Tag>
+            ),
           },
           {
             key: "4",
             label: "Тип",
-            children: data.kind,
+            children: (
+              <Tag
+                color={
+                  +data.kind == 1
+                    ? "cyan"
+                    : +data.kind == 2
+                    ? "geekblue"
+                    : "purple"
+                }
+                className="tag"
+              >
+                <p>
+                  {+data.kind == 1
+                    ? "Изобретение"
+                    : +data.kind == 2
+                    ? "Полезная модель"
+                    : "Промышленный образец"}
+                </p>
+              </Tag>
+            ),
           },
 
           {
@@ -156,9 +147,15 @@ const Patent = () => {
   useEffect(() => {
     fetchData();
   }, []);
-  if (loading) {
-    return <>False</>
-  }
+if (loading) {
+  return (
+    <Row style={{ height: "100vh" }} justify="center">
+      <Col span={24}>
+        <Spin></Spin>
+      </Col>
+    </Row>
+  );
+}
   return (
     // <div>
     //   <Row>
@@ -189,13 +186,13 @@ const Patent = () => {
     //     <Col span={12}>col-12</Col>
     //   </Row>
     // </div>
-    <div>
+    <div className='patent-container'>
       <Descriptions title={`${data.name}`} items={processedData} column={3} />
 
       <Row>
         <Col span={12}>
           <Card
-            title={`Авторы [${data.author_count} человек]`}
+            title={`Авторы`}
             bordered={false}
             style={{
               width: "100%",
