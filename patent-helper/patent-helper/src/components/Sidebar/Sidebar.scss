@@ -1,0 +1,153 @@
+// .sidebar {
+//   flex: 1;
+//   border-right: 0.5px solid rgb(230, 227, 227);
+//   min-height: 100vh;
+//   background-color: white;
+
+//   .top {
+//     height: 50px;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+
+//     .logo {
+//       font-size: 20px;
+//       font-weight: bold;
+//       color: #6439ff;
+//     }
+//   }
+
+//   hr {
+//     height: 0;
+//     border: 0.5px solid rgb(230, 227, 227);
+//   }
+
+//   .center {
+//     padding-left: 10px;
+
+//     ul {
+//       list-style: none;
+//       margin: 0;
+//       padding: 0;
+
+//       .title {
+//         font-size: 10px;
+//         font-weight: bold;
+//         color: #999;
+//         margin-top: 15px;
+//         margin-bottom: 5px;
+//       }
+
+//       li {
+//         display: flex;
+//         align-items: center;
+//         padding: 5px;
+//         cursor: pointer;
+
+//         &:hover {
+//           background-color: #ece8ff;
+//         }
+
+//         .icon {
+//           font-size: 18px;
+//         }
+
+//         span {
+//           font-size: 13px;
+//           font-weight: 600;
+//           color: #888;
+//           margin-left: 10px;
+//         }
+//       }
+//     }
+//   }
+
+//   .bottom {
+//     display: flex;
+//     align-items: center;
+//     margin: 10px;
+
+//     .colorOption {
+//       width: 20px;
+//       height: 20px;
+//       border-radius: 5px;
+//       border: 1px solid #7451f8;
+//       cursor: pointer;
+//       margin: 5px;
+
+//       &:nth-child(1) {
+//         background-color: whitesmoke;
+//       }
+
+//       &:nth-child(2) {
+//         background-color: #333;
+//       }
+
+//       &:nth-child(3) {
+//         background-color: darkblue;
+//       }
+//     }
+//   }
+// }
+
+.sidebar-container {
+  line-height: 120px;
+  color: #8c8c8c;
+  background-color: white !important;
+  border-top: 0.5px solid #b37feb;
+  padding-top: 1rem;
+
+  .sider-block {
+    text-align: start;
+    color: #8c8c8c;
+    background-color: white;
+    border: none;
+
+    .ant-list-header {
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-left: 1.2rem;
+      border: none;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .sider-item {
+      background-color: red;
+      display: flex;
+      align-items: center;
+      justify-content: start;
+      font-size: 1rem;
+      line-height: normal;
+      background-color: white;
+      border: none;
+
+      .li-icon {
+        padding: 0 1rem;
+        margin-left: 2rem;
+        color: #531dab;
+      }
+
+      .li-title {
+        width: 75%;
+        color: #595959;
+      }
+
+    }
+
+    .sider-item:hover {
+      background-color: #f9f0ff;
+      cursor: pointer;
+    }
+
+    .sider-item.active {
+      background-color: #f9f0ff;
+    }
+
+    .sider-item:first-child {
+      padding-top: 0.5rem;
+    }
+
+  }
+}

@@ -1,0 +1,28 @@
+.patent-table {
+  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+  .header {
+    color: rgba(89, 89, 89, 0.5);
+    font-size: 1rem;
+    font-style: italic;
+  }
+  .patent-name {
+    text-align: start;
+  }
+
+  .kind-tag {
+    font-size: 0.6rem;
+    margin: 0;
+  }
+
+  .actual-tag {
+    font-size: 0.6rem;
+    width: 68px;
+    text-align: center;
+    margin: 0;
+  }
+
+  .action-tag {
+    font-size: 0.6rem;
+    margin: 0;
+  }
+}

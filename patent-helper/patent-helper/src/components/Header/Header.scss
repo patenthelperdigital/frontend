@@ -1,0 +1,26 @@
+.header-container {
+  padding: 0;
+  border: 0.5px solid #b37feb; 
+  text-align: center;
+  color: #fff;
+  background-color: white;
+  height: 64;
+  line-height: 64px;
+  .logo {
+    border-right: 0.5px solid #b37feb;
+    font-size: 2rem;
+    text-align: center;
+    .logo-title {
+      font-family: "Nabla", system-ui;
+      text-shadow: 1px 1px 2px #9254de;
+    }
+  }
+  .upload-btn {
+    text-align: start;
+    margin-left: 2rem;
+
+  }
+  .mode-toggler {
+    text-align: end;
+  }
+}
