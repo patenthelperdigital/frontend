@@ -69,7 +69,7 @@ function App() {
                 <Route path="filters" element={<Filters />} />
                 <Route path="patents">
                   <Route index element={<Patents />} />
-                  <Route path=":stat" element={<PatentsStat />} />
+                  <Route path=":stats" element={<PatentsStat />} />
                 </Route>
                 <Route path="patent">
                   <Route path=":patent_kind">
@@ -82,7 +82,7 @@ function App() {
                 <Route path="persons">
                   <Route index element={<Holders />} />
                   <Route path=":person_tax_number" element={<SingleHolder />} />
-                  <Route path=":stat" element={<HoldersStat />} />
+                  <Route path=":stats" element={<HoldersStat />} />
                 </Route>
               </Route>
             </Routes>

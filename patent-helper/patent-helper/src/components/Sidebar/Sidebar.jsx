@@ -30,7 +30,7 @@ const patentsBlock = [
   {
     icon: <ProjectTwoTone twoToneColor="#531dab" />,
     title: "Статистика",
-    link: "/patents/stat",
+    link: "/patents/stats",
     item: "patentsStat",
   },
 ];
@@ -45,7 +45,7 @@ const holdersBlock = [
   {
     icon: <ProjectTwoTone twoToneColor="#531dab" />,
     title: "Статистика",
-    link: "/persons/stat",
+    link: "/persons/stats",
     item: "personsStat",
   },
 ];

@@ -1,79 +1,47 @@
-import { Card, Col, Row, Statistic, Descriptions, Spin } from "antd";
-import { useState, useEffect } from "react";
-import {
-  ArrowDownOutlined,
-  ArrowUpOutlined,
-  CopyTwoTone,
-} from "@ant-design/icons";
+import { Card, Col, Row, Descriptions, Spin, Watermark, message } from "antd";
+import { useState, useEffect, useContext } from "react";
+import { FilterContext } from "../../context/FilterProvider";
+
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import "./HolderStat.scss";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 const HolderStat = () => {
-  const [data, setData] = useState( {total_persons: 148216,
-    by_kind: {
-        "1": 61640,
-        "2": 86576
-    },
-    by_category: {
-        "ВУЗ": 847,
-        "Высокотехнологичные ИТ компании": 2941,
-        "Колледжи": 150,
-        "Научные организации": 10585,
-        "Прочие организации": 133693
-    }
-  });
+  const [filterId] = useContext(FilterContext);
+
+  const [data, setData] = useState();
   const [loading, setLoading] = useState(true);
 
-  // const fetchData = () => {
-  //   setLoading(true);
-  //   fetch("http://backend.patenthelper.digital/persons/stats", {
-  //     method: "GET",
-  //   })
-  //     .then((res) => {
-  //       console.log(res);
-  //       res.json();
-  //     })
-  //     .then((data) => {
-  //       console.log(data);
-  //       setLoading(false);
-  //       setData({
-  //         total_persons: 148216,
-  //         by_kind: {
-  //             "1": 61640,
-  //             "2": 86576
-  //         },
-  //         by_category: {
-  //             "ВУЗ": 847,
-  //             "Высокотехнологичные ИТ компании": 2941,
-  //             "Колледжи": 150,
-  //             "Научные организации": 10585,
-  //             "Прочие организации": 133693
-  //         }
-  //       });
-  //       //   setLoading(false);
-  //       //   setTableParams({
-  //       //     ...tableParams,
-  //       //     pagination: {
-  //       //       ...tableParams.pagination,
-  //       //       total: data.total,
-  //       //     },
-  //       //   });
-  //     });
-  // };
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+   const fetchData = () => {
+     setLoading(true);
+     fetch("http://backend.patenthelper.digital/persons/stats")
+       .then((res) => res.json())
+       .then((data) => {
+        console.log(data);
+         setLoading(false);
+         setData(data);
+       })
+       .catch((err) => {
+         message.error(`Произошла ошибка, попробуйте позже`);
+         setLoading(false);
+       });
+   };
+
+   useEffect(() => {
+     fetchData();
+   }, []);
+
   if (loading) {
     return (
-      <Row style={{ height: "100vh" }} justify="center">
-        <Col span={24}>
-          <Spin></Spin>
-        </Col>
-      </Row>
+      <Watermark content="Patent Helper Digital">
+        <div style={{ height: "100vh", width: "100vw" }}>
+          <Spin spinning fullscreen />
+        </div>
+      </Watermark>
     );
   }
+
   // const pieRuData = {
   //   labels: ["Зарубежные патенты", "Российские патенты"],
   //   datasets: [
@@ -131,7 +99,7 @@ const HolderStat = () => {
   //     },
   //   ],
   // };
-  const res = [
+  const firstCardData = [
     {
       key: "1",
       label: "Общее количество патентообладателей",
@@ -140,48 +108,54 @@ const HolderStat = () => {
     {
       key: "2",
       label: "Количество юридических лиц",
-      children: data.by_kind['1'],
+      children: data.by_kind["1"],
     },
     {
       key: "3",
       label: "Количество физических лиц",
-      children: data.by_kind['2'],
-    },
-
-    {
-      key: "4",
-      label: "ВУЗ",
-      children: data.by_category["ВУЗ"]
-        
-    },
-    {
-      key: "5",
-      label: "Высокотехнологичные ИТ компании",
-      children: data.by_category["Высокотехнологичные ИТ компании"],
-    },
-    {
-      key: "6",
-      label: "Колледжи",
-      children: data.by_category["Колледжи"],
-    },
-    {
-      key: "7",
-      label: "Научные организации",
-      children: data.by_category["Научные организации"],
-    },
-    {
-      key: "8",
-      label: "Прочие организации",
-      children: data.by_category["Прочие организации"],
-    },
-
-  ];
+      children: data.by_kind["2"],
+    }]
+const secondCardData = [
+  {
+    key: "1",
+    label: "ВУЗы",
+    children: data.by_category["ВУЗ"],
+  },
+  {
+    key: "2",
+    label: "Высокотехнологичные ИТ компании",
+    children: data.by_category["Высокотехнологичные ИТ компании"],
+  },
+  {
+    key: "3",
+    label: "Колледжи",
+    children: data.by_category["Колледжи"],
+  },
+  {
+    key: "4",
+    label: "Научные организации",
+    children: data.by_category["Научные организации"],
+  },
+  {
+    key: "5",
+    label: "Прочие организации",
+    children: data.by_category["Прочие организации"],
+  },
+];
+    
   return (
     <>
       <div className="stat">
         <Descriptions
-          title="Сводная статистика по патентам"
-          items={res}
+          className="first-desc"
+          title="Количество патентообладателей"
+          items={firstCardData}
+          column={3}
+        />
+        <Descriptions
+          className="second-desc"
+          title="Категории патентообладателей"
+          items={secondCardData}
           column={3}
         />
         {/* <Row>

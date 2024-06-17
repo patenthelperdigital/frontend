@@ -215,8 +215,6 @@ const PatentStat = () => {
               <Pie data={pieHoldersData} />
             </Card>
           </Col>
-        
-  
           <Col span={6}>
             <Card bordered={false}>
               <Pie data={pieAuthorsData} />
