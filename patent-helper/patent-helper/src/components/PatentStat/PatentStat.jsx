@@ -196,9 +196,9 @@ const PatentStat = () => {
   return (
     <>
       <div className="stat">
-        <h1 style={{ textAlign: "center" }}>
+         {filterId &&<h1 style={{ textAlign: "center" }}>
           Статистика по отфильтрованной ранее базе
-        </h1>
+        </h1>}
         <Descriptions
           className="first-desc"
           title="Количество патентов"

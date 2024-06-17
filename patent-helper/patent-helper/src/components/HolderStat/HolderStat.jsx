@@ -166,7 +166,7 @@ const HolderStat = () => {
   return (
     <>
       <div className="stat">
-        <h1 style={{ textAlign: "center" }}>Статистика по отфильтрованной ранее базе</h1>
+        {filterId && <h1 style={{ textAlign: "center" }}>Статистика по отфильтрованной ранее базе</h1>}
         <Descriptions
           className="first-holders-desc"
           title="Количество патентообладателей"
