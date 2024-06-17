@@ -1,18 +1,22 @@
 .stat {
   padding: 1rem 2rem;
 
-  .first-holders-desc {
+  .first-desc {
+    width: 60%;
     box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
     padding: 1rem 2rem;
     border-radius: 5px;
     margin-bottom: 2rem;
   }
 
-  .second-holders-desc {
+  .second-desc {
     width: 100%;
     box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
     padding: 1rem 2rem;
     margin-bottom: 2rem;
     border-radius: 5px;
+  }
+  .graphic {
+    margin-bottom: 2rem;
   }
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './Patent.scss'
-import { List, Col, Row, Button, Space, Switch, Descriptions, Card, Collapse, Spin, Tag } from "antd";
+import { List, Col, Row, Button, Space, Switch, Descriptions, Card, Collapse, Tag } from "antd";
 import { useParams } from 'react-router-dom';
 
 
@@ -149,11 +149,7 @@ const Patent = () => {
   }, []);
 if (loading) {
   return (
-    <Row style={{ height: "100vh" }} justify="center">
-      <Col span={24}>
-        <Spin></Spin>
-      </Col>
-    </Row>
+    <>Patent</>
   );
 }
   return (

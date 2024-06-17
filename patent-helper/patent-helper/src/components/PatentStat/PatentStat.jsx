@@ -15,7 +15,11 @@ const PatentStat = () => {
 
   const fetchData = () => {
     setLoading(true);
-    fetch("http://backend.patenthelper.digital/patents/stats")
+    const url = filterId
+      ? `http://backend.patenthelper.digital/patents/stats?filter_id=${filterId}`
+      : "http://backend.patenthelper.digital/patents/stats";
+      console.log(url)
+    fetch(url)
       .then((res) => res.json())
       .then((data) => {
         setLoading(false);
@@ -192,6 +196,9 @@ const PatentStat = () => {
   return (
     <>
       <div className="stat">
+        <h1 style={{ textAlign: "center" }}>
+          Статистика по отфильтрованной ранее базе
+        </h1>
         <Descriptions
           className="first-desc"
           title="Количество патентов"

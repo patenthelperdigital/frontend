@@ -3,15 +3,21 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Layout, List } from "antd";
 import {
-  LayoutTwoTone,
   FilterTwoTone,
   BulbTwoTone,
   ProjectTwoTone,
   IdcardTwoTone,
   FileUnknownTwoTone,
+  AppstoreTwoTone,
 } from "@ant-design/icons";
 
 const mainBlock = [
+  {
+    icon: <AppstoreTwoTone twoToneColor="#531dab" />,
+    title: "Дашборд",
+    link: "/",
+    item: "dashboard",
+  },
   {
     icon: <FilterTwoTone twoToneColor="#531dab" />,
     title: "Фильтры",

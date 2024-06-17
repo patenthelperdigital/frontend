@@ -1,6 +1,7 @@
 import "./PatentsTable.scss";
 import { Table, Tag, Card, Alert, Space, Row, Col, Select, Button } from "antd";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { FilterContext } from "../../context/FilterProvider";
 import qs from "qs";
 import { Link } from "react-router-dom";
 const getParams = (params) => ({
@@ -150,6 +151,7 @@ const columns = [
 ];
 
 const PatentsTable = () => {
+  const [, setFilterId] = useContext(FilterContext);
   const [data, setData] = useState();
     const [filterOptions, setFilterOptions] = useState();
     const [filterOptionsLoading, setFilterOptionsLoading] = useState(true);
@@ -262,7 +264,8 @@ const PatentsTable = () => {
           
            setData(data.items);
            setLoading(false);
-           setDisabledDownload(false)
+           setDisabledDownload(false);
+           setFilterId(filterFile[0]);
            setTableParams({
              ...tableParams,
              pagination: {
@@ -324,10 +327,7 @@ const PatentsTable = () => {
             method: "GET",
           }
         )
-          .then((res) => {
-            res.blob()
-      })
-          
+          .then((res) => res.blob())
           .then((blob) => {
             const url = window.URL.createObjectURL(new Blob([blob]));
             const link = document.createElement('a');

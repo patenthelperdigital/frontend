@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "./Holder.scss";
 import {
 
-  Descriptions,Spin
+  Descriptions
 
 } from "antd";
 import { useParams } from "react-router-dom";
@@ -152,13 +152,7 @@ const Patent = () => {
   //   fetchData();
   // }, []);
    if (loading) {
-     return (
-       <Row style={{ height: "100vh" }} justify="center">
-         <Col span={24}>
-           <Spin></Spin>
-         </Col>
-       </Row>
-     );
+     return <p>Holder</p>;
    }
   const columns = [
     {

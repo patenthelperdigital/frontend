@@ -6,7 +6,7 @@ import SinglePatent from "./pages/SinglePatent/SinglePatent";
 import SingleHolder from "./pages/SingleHolder/SingleHolder";
 import Filters from "./pages/Filters/Filters";
 import PatentsStat from "./pages/PatentsStat/PatentsStat";
-import HoldersStat from "./pages/HoldersStat/HoldersStat";
+import HoldersStat from './pages/HoldersStat/HoldersStat';
 import MasterProvider from "./context/MasterProvider";
 import {
 
@@ -65,11 +65,11 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/">
-                <Route index element={<Patents />} />
+                <Route index element={<Main />} />
                 <Route path="filters" element={<Filters />} />
                 <Route path="patents">
                   <Route index element={<Patents />} />
-                  <Route path=":stats" element={<PatentsStat />} />
+                  <Route path="stats" element={<PatentsStat />} />
                 </Route>
                 <Route path="patent">
                   <Route path=":patent_kind">
@@ -82,7 +82,7 @@ function App() {
                 <Route path="persons">
                   <Route index element={<Holders />} />
                   <Route path=":person_tax_number" element={<SingleHolder />} />
-                  <Route path=":stats" element={<HoldersStat />} />
+                  <Route path="stats" element={<HoldersStat />} />
                 </Route>
               </Route>
             </Routes>
