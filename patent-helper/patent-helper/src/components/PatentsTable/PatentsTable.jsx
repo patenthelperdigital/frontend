@@ -154,6 +154,7 @@ const PatentsTable = () => {
     const [filterOptions, setFilterOptions] = useState();
     const [filterOptionsLoading, setFilterOptionsLoading] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [disabledDownload, setDisabledDownload] = useState(true)
   
   const [filters, setFilters] = useState();
   const [filterFile, setFilterFile] = useState();
@@ -261,6 +262,7 @@ const PatentsTable = () => {
           
            setData(data.items);
            setLoading(false);
+           setDisabledDownload(false)
            setTableParams({
              ...tableParams,
              pagination: {
@@ -315,6 +317,7 @@ const PatentsTable = () => {
           
         }
         console.log(filterString);
+        console.log(`http://backend.patenthelper.digital/patents/export?${filterString}`)
         fetch(
           `http://backend.patenthelper.digital/patents/export?${filterString}`,
           {
@@ -322,12 +325,20 @@ const PatentsTable = () => {
           }
         )
           .then((res) => {
-            console.log(res.body)
-            res.body
+            res.blob()
       })
           
-          .then((data) => {
-            console.log(data);
+          .then((blob) => {
+            const url = window.URL.createObjectURL(new Blob([blob]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `filtered.xlsx`);
+             // 3. Append to html page
+             document.body.appendChild(link);
+             // 4. Force download
+             link.click();
+             // 5. Clean up and remove the link
+             link.parentNode.removeChild(link);
 
             // setData(data.items);
             // setLoading(false);
@@ -396,6 +407,7 @@ const PatentsTable = () => {
                 alignSelf: "right",
               }}
               onClick={fetchExport}
+              disabled={disabledDownload}
             >
               Выгрузить результат
             </Button>

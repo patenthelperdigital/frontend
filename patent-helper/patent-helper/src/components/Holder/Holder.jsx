@@ -79,78 +79,78 @@ const Patent = () => {
   const [table, setTable] = useState();
 
 
-  const fetchData = () => {
-    setLoading(true);
-    fetch(
-      `http://backend.patenthelper.digital/persons/${person_tax_number}`,
-      {
-        method: "GET",
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        const res = [
-          {
-            key: "1",
-            label: "ИНН",
-            children: data.tax_number,
-          },
-          {
-            key: "2",
-            label: "Полное наименование",
-            children: data.full_name,
-          },
-          {
-            key: "3",
-            label: "Тип",
-            children: getFirstKindTag(data.kind),
-          },
-          {
-            key: "4",
-            label: "Категория",
-            children: data.category,
-          },
+  // const fetchData = () => {
+  //   setLoading(true);
+  //   fetch(
+  //     `http://backend.patenthelper.digital/persons/${person_tax_number}`,
+  //     {
+  //       method: "GET",
+  //     }
+  //   )
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       console.log(data);
+  //       const res = [
+  //         {
+  //           key: "1",
+  //           label: "ИНН",
+  //           children: data.tax_number,
+  //         },
+  //         {
+  //           key: "2",
+  //           label: "Полное наименование",
+  //           children: data.full_name,
+  //         },
+  //         {
+  //           key: "3",
+  //           label: "Тип",
+  //           children: getFirstKindTag(data.kind),
+  //         },
+  //         {
+  //           key: "4",
+  //           label: "Категория",
+  //           children: data.category,
+  //         },
 
-          {
-            key: "5",
-            label: "Дата регистрации",
-            children: data.reg_date,
-          },
-          {
-            key: "6",
-            label: "Активность",
-            children: (
-              <Tag color={data.active ? "green" : "red"} className="tag">
-                <p>{data.active ? "Действует" : "Просрочен"}</p>
-              </Tag>
-            ),
-          },
-          {
-            key: "7",
-            label: "Адрес регистрации",
-            children: data.tax_number,
-          },
-          {
-            key: "8",
-            label: "Фактический адрес",
-            children: data.full_name,
-          },
-        ];
-                const patent = {
-                  count: data.patent_count,
-                  table: data.patents,
-                }
+  //         {
+  //           key: "5",
+  //           label: "Дата регистрации",
+  //           children: data.reg_date,
+  //         },
+  //         {
+  //           key: "6",
+  //           label: "Активность",
+  //           children: (
+  //             <Tag color={data.active ? "green" : "red"} className="tag">
+  //               <p>{data.active ? "Действует" : "Просрочен"}</p>
+  //             </Tag>
+  //           ),
+  //         },
+  //         {
+  //           key: "7",
+  //           label: "Адрес регистрации",
+  //           children: data.tax_number,
+  //         },
+  //         {
+  //           key: "8",
+  //           label: "Фактический адрес",
+  //           children: data.full_name,
+  //         },
+  //       ];
+  //               const patent = {
+  //                 count: data.patent_count,
+  //                 table: data.patents,
+  //               }
 
-        setData(data);
-        setTable(patent);
-        setProcessedData(res);
-        setLoading(false);
-      });
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
+  //       setData(data);
+  //       setTable(patent);
+  //       setProcessedData(res);
+  //       setLoading(false);
+  //     });
+  // };
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
    if (loading) {
      return (
        <Row style={{ height: "100vh" }} justify="center">

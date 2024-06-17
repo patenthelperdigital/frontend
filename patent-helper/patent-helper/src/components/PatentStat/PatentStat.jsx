@@ -21,7 +21,7 @@ const PatentStat = () => {
     })
       .then((res) => {
         console.log(res);
-        res.json();
+        res.text();
       })
       .then((data) => {
         console.log(data);
@@ -37,10 +37,15 @@ const PatentStat = () => {
             with_holders_percent: 64,
             ru_with_holders_percent: 84,
             by_author_count: {
-              1: 347817,
-              "2–5": 644826,
-              "5+": 145025,
+                "1": 347817,
+                "2–5": 644826,
+                "5+": 145025
             },
+            by_patent_kind: {
+                "1": 813633,
+                "2": 222362,
+                "3": 101673
+            }
           });
         }
       });
