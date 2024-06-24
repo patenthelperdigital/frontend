@@ -1,8 +1,16 @@
-import { Card, Col, Row, Descriptions, Spin, Watermark, message } from "antd";
+import {
+  Card,
+  Col,
+  Row,
+  Spin,
+  Watermark,
+  message,
+  Statistic,
+} from "antd";
 import { useState, useEffect } from "react";
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Pie } from "react-chartjs-2";
+import { Pie, Doughnut } from "react-chartjs-2";
 import "./Dashboard.scss";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -184,176 +192,434 @@ const Dashboard = () => {
     ],
   };
 
-  const firstPatentCardData = [
-    {
-      key: "1",
-      label: "Общее количество патентов",
-      children: patentData.total_patents,
-    },
-    {
-      key: "2",
-      label: "Привязанных правообладателей",
-      children: (
-        <span>
-          {`${patentData.total_with_holders} `}
-          <strong>[{patentData.with_holders_percent}%]</strong>
-        </span>
-      ),
-    },
-    {
-      key: "3",
-      label: "Общее количество патентов [RU]",
-      children: patentData.total_ru_patents,
-    },
-
-    {
-      key: "4",
-      label: "Привязанных правообладателей [RU]",
-      children: (
-        <span>
-          {`${patentData.total_ru_with_holders} `}
-          <strong>[{patentData.ru_with_holders_percent}%]</strong>
-        </span>
-      ),
-    },
-  ];
-  const secondPatentCardData = [
-    {
-      key: "1",
-      label: "Патенты с одним автором",
-      children: patentData.by_author_count["1"],
-    },
-    {
-      key: "2",
-      label: "Патенты авторства от 2 до 5 человек ",
-      children: patentData.by_author_count["2–5"],
-    },
-    {
-      key: "3",
-      label: "Патенты авторства более 3 человек ",
-      children: patentData.by_author_count["5+"],
-    },
-    {
-      key: "4",
-      label: "На изобретения",
-      children: patentData.by_patent_kind["1"],
-    },
-
-    {
-      key: "5",
-      label: "На полезную модель",
-      children: patentData.by_patent_kind["2"],
-    },
-    {
-      key: "6",
-      label: "На промышленный образец",
-      children: patentData.by_patent_kind["3"],
-    },
-  ];
-
-  const firstHolderCardData = [
-    {
-      key: "1",
-      label: "Общее количество патентообладателей",
-      children: holderData.total_persons,
-    },
-    {
-      key: "2",
-      label: "Количество юридических лиц",
-      children: holderData.by_kind["1"],
-    },
-    {
-      key: "3",
-      label: "Количество физических лиц",
-      children: holderData.by_kind["2"],
-    },
-  ];
-  const secondHolderCardData = [
-    {
-      key: "1",
-      label: "ВУЗы",
-      children: holderData.by_category["ВУЗ"],
-    },
-    {
-      key: "2",
-      label: "Высокотехнологичные ИТ компании",
-      children: holderData.by_category["Высокотехнологичные ИТ компании"],
-    },
-    {
-      key: "3",
-      label: "Колледжи",
-      children: holderData.by_category["Колледжи"],
-    },
-    {
-      key: "4",
-      label: "Научные организации",
-      children: holderData.by_category["Научные организации"],
-    },
-    {
-      key: "5",
-      label: "Прочие организации",
-      children: holderData.by_category["Прочие организации"],
-    },
-  ];
+  
   return (
     <>
       <div className="stat" style={{ width: "100%" }}>
-        <h1 style={{textAlign: 'center'}}>Статистика по всей базе</h1>
-        <Descriptions
-          className="first-desc"
-          title="Количество патентов"
-          items={firstPatentCardData}
-          column={2}
-        />
-        <Descriptions
-          className="second-desc"
-          title="Сводная статистика по патентам"
-          items={secondPatentCardData}
-          column={3}
-        />
-        <Row className="graphic">
-          <Col span={6}>
-            <Card bordered={false}>
-              <Pie data={pieRuData} />
+        <h1 style={{ textAlign: "center" }}>Статистика по всей базе</h1>
+        <Row>
+          <Col span={12}>
+            <Card
+              title="Количество патентов"
+              bordered={false}
+              style={{
+                width: "100%",
+              }}
+            >
+              <Row>
+                <Col sm={12}>
+                  <Row>
+                    <Col span={24} style={{ marginBottom: "1rem" }}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="Общее"
+                          value={patentData.total_patents}
+                          valueStyle={{
+                            color: "#ffc53d",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                    <Col span={24} style={{ marginBottom: "1rem" }}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="С привязанными правообладателями"
+                          value={`${patentData.total_with_holders} [${patentData.with_holders_percent} %]`}
+                          valueStyle={{
+                            color: "#36cfc9",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                    <Col span={24}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="Без привязки правообладателей"
+                          value={`${
+                            patentData.total_patents -
+                            patentData.total_with_holders
+                          } [${100 - patentData.with_holders_percent} %]`}
+                          valueStyle={{
+                            color: "#ff7875",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col span={12}>
+                  <Card bordered={false}>
+                    <Doughnut data={pieHoldersData} />
+                  </Card>
+                </Col>
+              </Row>
             </Card>
           </Col>
-          <Col span={6}>
-            <Card bordered={false}>
-              <Pie data={pieHoldersData} />
-            </Card>
-          </Col>
-          <Col span={6}>
-            <Card bordered={false}>
-              <Pie data={pieAuthorsData} />
-            </Card>
-          </Col>
-          <Col span={6}>
-            <Card bordered={false}>
-              <Pie data={pieTypesData} />
+          <Col span={12}>
+            <Card
+              title="Количество патентов РФ [RU]"
+              bordered={false}
+              style={{
+                width: "100%",
+              }}
+            >
+              <Row>
+                <Col sm={12}>
+                  <Row>
+                    <Col span={24} style={{ marginBottom: "1rem" }}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="Общее [RU]"
+                          value={patentData.total_ru_patents}
+                          valueStyle={{
+                            color: "#a0d911",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                    <Col span={24} style={{ marginBottom: "1rem" }}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="С привязанными правообладателями [RU]"
+                          value={`${patentData.total_ru_with_holders} [${patentData.ru_with_holders_percent} %]`}
+                          valueStyle={{
+                            color: "#b37feb",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                    <Col span={24}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="Без привязки правообладателей [RU]"
+                          value={`${
+                            patentData.total_ru_patents -
+                            patentData.total_ru_with_holders
+                          } [${100 - patentData.ru_with_holders_percent} %]`}
+                          valueStyle={{
+                            color: "#ffc53d",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col span={12}>
+                  <Card bordered={false}>
+                    <Pie data={pieRuData} />
+                  </Card>
+                </Col>
+              </Row>
             </Card>
           </Col>
         </Row>
-        <Descriptions
-          className="first-holders-desc"
-          title="Количество патентообладателей"
-          items={firstHolderCardData}
-          column={3}
-        />
-        <Descriptions
-          className="second-holders-desc"
-          title="Категории патентообладателей"
-          items={secondHolderCardData}
-          column={3}
-        />
         <Row>
           <Col span={12}>
-            <Card bordered={false}>
-              <Pie data={pieKindData} />
+            <Card
+              title="Сводная статистика по авторам патентов"
+              bordered={false}
+              style={{
+                width: "100%",
+              }}
+            >
+              <Row>
+                <Col sm={12}>
+                  <Row>
+                    <Col span={24} style={{ marginBottom: "1rem" }}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="Патенты с одним автором"
+                          value={`${
+                            patentData.by_author_count["1"]
+                          } [${Math.floor(
+                            (patentData.by_author_count["1"] * 100) /
+                              (patentData.by_author_count["1"] +
+                                patentData.by_author_count["2–5"] +
+                                patentData.by_author_count["5+"])
+                          )} %]`}
+                          valueStyle={{
+                            color: "#ff7875",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                    <Col span={24} style={{ marginBottom: "1rem" }}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="Патенты авторства от 2 до 5 человек"
+                          value={`${
+                            patentData.by_author_count["2–5"]
+                          } [${Math.floor(
+                            (patentData.by_author_count["2–5"] * 100) /
+                              (patentData.by_author_count["1"] +
+                                patentData.by_author_count["2–5"] +
+                                patentData.by_author_count["5+"])
+                          )} %]`}
+                          valueStyle={{
+                            color: "#597ef7",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                    <Col span={24}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="Патенты авторства более 5 человек"
+                          value={`${
+                            patentData.by_author_count["5+"]
+                          } [${Math.floor(
+                            (patentData.by_author_count["5+"] * 100) /
+                              (patentData.by_author_count["1"] +
+                                patentData.by_author_count["2–5"] +
+                                patentData.by_author_count["5+"])
+                          )} %]`}
+                          valueStyle={{
+                            color: "#ffc53d",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col span={12}>
+                  <Card bordered={false}>
+                    <Doughnut data={pieAuthorsData} />
+                  </Card>
+                </Col>
+              </Row>
             </Card>
           </Col>
           <Col span={12}>
-            <Card bordered={false}>
-              <Pie data={pieCategoryData} />
+            <Card
+              title="Сводная статистика по типам патентов"
+              bordered={false}
+              style={{
+                width: "100%",
+              }}
+            >
+              <Row>
+                <Col sm={12}>
+                  <Row>
+                    <Col span={24} style={{ marginBottom: "1rem" }}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="На изобретения"
+                          value={`${
+                            patentData.by_patent_kind["1"]
+                          } [${Math.floor(
+                            (patentData.by_patent_kind["1"] * 100) /
+                              (patentData.by_patent_kind["1"] +
+                                patentData.by_patent_kind["2"] +
+                                patentData.by_patent_kind["3"])
+                          )} %]`}
+                          valueStyle={{
+                            color: "#36cfc9",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                    <Col span={24} style={{ marginBottom: "1rem" }}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="На полезную модель"
+                          value={`${
+                            patentData.by_patent_kind["2"]
+                          } [${Math.floor(
+                            (patentData.by_patent_kind["2"] * 100) /
+                              (patentData.by_patent_kind["1"] +
+                                patentData.by_patent_kind["2"] +
+                                patentData.by_patent_kind["3"])
+                          )} %]`}
+                          valueStyle={{
+                            color: "#b37feb",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                    <Col span={24}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="На промышленный образец"
+                          value={`${
+                            patentData.by_patent_kind["3"]
+                          } [${Math.floor(
+                            (patentData.by_patent_kind["3"] * 100) /
+                              (patentData.by_patent_kind["1"] +
+                                patentData.by_patent_kind["2"] +
+                                patentData.by_patent_kind["3"])
+                          )} %]`}
+                          valueStyle={{
+                            color: "#ffc53d",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col span={12}>
+                  <Card bordered={false}>
+                    <Pie data={pieTypesData} />
+                  </Card>
+                </Col>
+              </Row>
+            </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <Card
+              title="Количество патентообладателей"
+              bordered={false}
+              style={{
+                width: "100%",
+              }}
+            >
+              <Row>
+                <Col sm={12}>
+                  <Row>
+                    <Col span={24}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="Всего"
+                          value={holderData.total_persons}
+                          valueStyle={{
+                            color: "#36cfc9",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                    <Col span={24}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="Физические лица"
+                          value={`${holderData.by_kind[1]} [${Math.floor(
+                            (holderData.by_kind[1] * 100) / holderData.total_persons
+                          )} %]`}
+                          valueStyle={{
+                            color: "#ffc53d",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                    <Col span={24}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="Юридические лица"
+                          value={`${holderData.by_kind[2]} [${Math.floor(
+                            (holderData.by_kind[2] * 100) / holderData.total_persons
+                          )} %]`}
+                          valueStyle={{
+                            color: "#9254de",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col span={12}>
+                  <Card bordered={false}>
+                    <Pie data={pieKindData} />
+                  </Card>
+                </Col>
+              </Row>
+            </Card>
+          </Col>
+          <Col span={12}>
+            <Card
+              title="Кaтегории патентообладателей"
+              bordered={false}
+              style={{
+                width: "100%",
+              }}
+            >
+              <Row>
+                <Col sm={12}>
+                  <Row>
+                    <Col span={24}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="ВУЗы"
+                          value={`${holderData.by_category["ВУЗ"]} [${(
+                            (holderData.by_category["ВУЗ"] * 100) /
+                            holderData.total_persons
+                          ).toFixed(2)} %]`}
+                          valueStyle={{
+                            color: "#ffc53d",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                    <Col span={24}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="Высокотехнологичные ИТ компании"
+                          value={`${
+                            holderData.by_category["Высокотехнологичные ИТ компании"]
+                          } [${(
+                            (holderData.by_category[
+                              "Высокотехнологичные ИТ компании"
+                            ] *
+                              100) /
+                            holderData.total_persons
+                          ).toFixed(2)} %]`}
+                          valueStyle={{
+                            color: "#36cfc9",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                    <Col span={24}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="Колледжи"
+                          value={`${holderData.by_category["Колледжи"]} [${(
+                            (holderData.by_category["Колледжи"] * 100) /
+                            holderData.total_persons
+                          ).toFixed(2)} %]`}
+                          valueStyle={{
+                            color: "#b37feb",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                    <Col span={24}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="Научные организации"
+                          value={`${
+                            holderData.by_category["Научные организации"]
+                          } [${(
+                            (holderData.by_category["Научные организации"] * 100) /
+                            holderData.total_persons
+                          ).toFixed(2)} %]`}
+                          valueStyle={{
+                            color: "#85a5ff",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                    <Col span={24}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="Прочие организации"
+                          value={`${holderData.by_category["Прочие организации"]} [${(
+                            (holderData.by_category["Прочие организации"] * 100) /
+                            holderData.total_persons
+                          ).toFixed(2)} %]`}
+                          valueStyle={{
+                            color: "#f759ab",
+                          }}
+                        />
+                      </Card>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col span={12}>
+                  <Card bordered={false}>
+                    <Doughnut data={pieCategoryData} />
+                  </Card>
+                </Col>
+              </Row>
             </Card>
           </Col>
         </Row>

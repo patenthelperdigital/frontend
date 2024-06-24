@@ -5,6 +5,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import FiltersFileForm from "../FiltersFileForm/FiltersFileForm";
 
 const FiltersTable = () => {
+  const [pageSize, setPageSize] = useState(10)
   const [loading, setLoading] = useState(false);
   const [uploaded, setUploaded] = useState(false);
   const [data, setData] = useState();
@@ -16,8 +17,9 @@ const FiltersTable = () => {
      })
        .then((res) => res.json())
        .then((data) => {
+        setPageSize(data.length)
          setData(
-           data
+           data.reverse()
          );
          setLoading(false);
        });
@@ -35,7 +37,7 @@ const FiltersTable = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          setUploaded(prev => !prev);
+          setUploaded((prev) => !prev);
           setLoading(false);
         });
     };
@@ -45,6 +47,8 @@ const FiltersTable = () => {
     {
       title: "Название файла",
       dataIndex: "name",
+      width: "30%",
+      ellipsis: true,
       render: (name) => {
         return <span className="file-name">{name}</span>;
       },
@@ -52,6 +56,8 @@ const FiltersTable = () => {
     {
       title: "Файл",
       dataIndex: "filename",
+      width: "35%",
+      ellipsis: true,
       render: (name) => {
         return <span className="file-name">{name}</span>;
       },
@@ -59,9 +65,10 @@ const FiltersTable = () => {
     {
       title: "Дата загрузки",
       dataIndex: "created",
+      width: "10%",
       render: (date) => {
         let newForm = date.split("T");
-        newForm = newForm[0] + ' ' + newForm[1].slice(0, -8);
+        newForm = newForm[0] + " " + newForm[1].slice(0, -7);
         return <span className="file-date">{newForm}</span>;
       },
     },
@@ -69,6 +76,7 @@ const FiltersTable = () => {
       title: "Количество ИНН",
       dataIndex: "tax_numbers_count",
       align: "center",
+      width: "10%",
       render: (count) => {
         return (
           <Tag
@@ -84,6 +92,7 @@ const FiltersTable = () => {
     {
       key: "operation",
       align: "center",
+      width: "15%",
       render: ({ id }) => {
         return (
           <Button
@@ -101,7 +110,7 @@ const FiltersTable = () => {
     <div className="filters-table-container">
       <Table
         scroll={{
-          y: 590,
+          y: 950,
         }}
         title={() => <FiltersFileForm onUpload={setUploaded} />}
         className="patent-table"
@@ -111,6 +120,7 @@ const FiltersTable = () => {
         loading={loading}
         pagination={{
           position: ["none"],
+          pageSize: pageSize
         }}
       />
     </div>

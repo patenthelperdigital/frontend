@@ -1,22 +1,24 @@
 import './FiltersFileForm.scss'
 import { UploadOutlined } from '@ant-design/icons';
-import { Button, Upload, message , Input} from 'antd';
-import React, { useState, useRef } from 'react';
+import { Button, Upload, message , Input, Tooltip} from 'antd';
+import React, { useState } from 'react';
 import excelIcon from '/excel.svg'
 
-
-
 const FiltersFileForm = ({onUpload}) => {
-  const input = useRef();
+  const [inputVal, setInputVal] = useState('')
   const [file, setFile] = useState(null);
   const [fileList, setFileList] = useState([])
   const [uploading, setUploading] = useState(false);
+
   const handleUpload = () => {
     setFileList([]);
     const formData = new FormData();
     formData.append("file", file);
-    const name = input.current?.value ? input.current?.value : file.name.slice(0, -5);
+    const name = inputVal
+      ? inputVal
+      : file.name.slice(0, -5);
     setUploading(true);
+    setInputVal("");
     fetch(
       `http://backend.patenthelper.digital/filters?name=${name}`,
       {
@@ -24,18 +26,17 @@ const FiltersFileForm = ({onUpload}) => {
         body: formData,
       }
     )
-      .then((res) => {
-        res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
-        console.log(data)
+        if (!data.filename) {
+          message.error(`Серверная ошибка! Пожалуйста, попробуйте позже`);
+        }
       })
       .finally(() => {
         setFile(null);
         setFileList([]);
         setUploading(false);
         onUpload(prev => !prev);
-        input.current.value = '';
       });
   };
   const props = {
@@ -56,7 +57,7 @@ const FiltersFileForm = ({onUpload}) => {
     maxCount: '1',
     fileList,
     listType: "picture",
-    iconRender: () => <img src={excelIcon} alt="" />,
+    iconRender: () => <img src={excelIcon} alt="xlsx" />,
     onRemove: () => {
       setFile(null)
       setFileList([])
@@ -66,24 +67,24 @@ const FiltersFileForm = ({onUpload}) => {
     <div className="upload-container">
       <Upload {...props}>
         <Button icon={<UploadOutlined />} className="upload-btn">
-          Upload
+          Прикрепить файл
         </Button>
       </Upload>
       <Input
-        ref={input}
         className="upload-btn"
         placeholder="Название файла (опционально)"
+        onChange={(e) => setInputVal(e.target.value)}
+        value={inputVal}
       />
-      ;
-      <Button
-        className="upload-btn"
-        type="primary"
-        onClick={handleUpload}
-        disabled={fileList.length === 0}
-        loading={uploading}
-      >
-        {uploading ? "Uploading" : "Start Upload"}
-      </Button>
+        <Button
+          className="upload-btn"
+          type="primary"
+          onClick={handleUpload}
+          disabled={fileList.length === 0}
+          loading={uploading}
+        >
+          {uploading ? "Загрузка..." : "Загрузить"}
+        </Button>
     </div>
   );
 }

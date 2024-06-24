@@ -5,11 +5,10 @@ import {
   Descriptions
 
 } from "antd";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 import { Table, Tag, Col, Row, Watermark, Spin } from "antd";
 
-import { Link } from "react-router-dom";
 const getFirstKindTag = (id) => {
   const tag = { title: "", color: "" };
   switch (id) {
@@ -89,7 +88,6 @@ const Patent = () => {
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         const res = [
           {
             key: "1",
@@ -260,10 +258,7 @@ const Patent = () => {
             pagination={{
               position: ["none"],
               current: 1,
-              pageSize: table.count,
-            }}
-            scroll={{
-              y: 500,
+              pageSize: 10,
             }}
           />
         </Col>

@@ -1,7 +1,16 @@
 import { useState, useEffect } from 'react';
 import './Patent.scss'
-import { List, Col, Row, Button, Space, Switch, Descriptions, Card, Collapse, Tag } from "antd";
-import { useParams } from 'react-router-dom';
+import {
+  Col,
+  Row,
+  Descriptions,
+  Card,
+  Tag,
+  Table,
+  Watermark,
+  Spin,
+} from "antd";
+import { useParams, Link } from 'react-router-dom';
 
 
 
@@ -28,7 +37,7 @@ const Patent = () => {
   const [data, setData] = useState()
   const [loading, setLoading] = useState(true);
   const [processedData, setProcessedData] = useState();
-  const [holders, setHolders] = useState();
+ const [table, setTable] = useState();
 
   const fetchData = () => {
     setLoading(true);
@@ -37,7 +46,6 @@ const Patent = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
         const res = [
           {
             key: "1",
@@ -125,6 +133,11 @@ const Patent = () => {
             children: data.address,
           },
         ];
+       
+        const patent = {
+          count: data.patent_holders.length,
+          table: data.patent_holders
+        };
         const holders = data.patent_holders.map(item=>{
           return {
             key: item.tax_number,
@@ -138,7 +151,7 @@ const Patent = () => {
           };
         })
         setData(data);
-        setHolders(holders)
+        setTable(patent)
         setProcessedData(res)
         setLoading(false);
       
@@ -148,10 +161,45 @@ const Patent = () => {
     fetchData();
   }, []);
 if (loading) {
-  return (
-    <>Patent</>
-  );
+       return (
+         <Watermark content="Patent Helper Digital">
+           <div style={{ height: "100vh", width: "100vw" }}>
+             <Spin spinning fullscreen />
+           </div>
+         </Watermark>
+       );
 }
+
+ const columns = [
+   {
+     title: "ИНН",
+     dataIndex: "tax_number",
+     key: "tax_number",
+     width: "30%",
+   },
+   {
+     title: "Наименование",
+     dataIndex: "full_name",
+     key: "full_name",
+     width: "30%",
+   },
+   {
+     key: "operation",
+     align: "center",
+     width: "40%",
+     render: ({ tax_number }) => {
+       return (
+         <Link to={`/persons/${tax_number}`}>
+           <Tag color="geekblue" key={tax_number} className="action-tag">
+             <i>Просмотр</i>
+           </Tag>
+         </Link>
+       );
+     },
+   },
+ ];
+
+
   return (
     // <div>
     //   <Row>
@@ -182,7 +230,7 @@ if (loading) {
     //     <Col span={12}>col-12</Col>
     //   </Row>
     // </div>
-    <div className='patent-container'>
+    <div className="patent-container">
       <Descriptions title={`${data.name}`} items={processedData} column={3} />
 
       <Row>
@@ -194,16 +242,20 @@ if (loading) {
               width: "100%",
             }}
           >
-          
             <pre>{data.author_raw}</pre>
           </Card>
         </Col>
         <Col span={12}>
-          <Card title="Патентообладатели" bordered={false} style={{
-              width: "100%",
-            }}>
-           <Collapse accordion items={holders} />
-                </Card>
+          <Table
+            title={() => <strong>Всего патентообладателей: {table.count} </strong>}
+            columns={columns}
+            dataSource={table.table}
+            pagination={{
+              position: ["none"],
+              current: 1,
+              pageSize: table.count,
+            }}
+          />
         </Col>
       </Row>
     </div>

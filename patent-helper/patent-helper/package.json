@@ -12,6 +12,9 @@
   "dependencies": {
     "@ant-design/colors": "^7.0.2",
     "@ant-design/icons": "^5.3.7",
+    "@nivo/bar": "^0.87.0",
+    "@nivo/core": "^0.87.0",
+    "@nivo/pie": "^0.87.0",
     "antd": "^5.18.1",
     "chart.js": "^4.4.3",
     "qs": "^6.12.1",
