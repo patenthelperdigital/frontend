@@ -242,8 +242,8 @@ const HoldersTable = () => {
         filterString += `&category=${filteredInfo.category[0]}`;
       }
 
-      if (filteredInfo && filteredInfo.actual) {
-        filterString += `&actual=${filteredInfo.actual[0]}`;
+      if (filteredInfo && filteredInfo.active) {
+        filterString += `&active=${filteredInfo.active[0]}`;
       }
 
       fetch(

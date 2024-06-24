@@ -36,7 +36,7 @@ function App() {
                 colorTextQuaternary: "#531dab",
               },
               Table: {
-                cellFontSize: 10,
+                cellFontSize: 16,
                 cellPaddingBlock: 8,
                 headerBorderRadius: 0,
                 headerColor: "#595959",

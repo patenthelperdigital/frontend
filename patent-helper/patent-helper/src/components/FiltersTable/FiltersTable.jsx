@@ -29,17 +29,15 @@ const FiltersTable = () => {
   }, [uploaded]);
 
   const deleteFilterFile = (id) => {
-    console.log(id)
     const fetchData = () => {
       setLoading(true);
       fetch(`http://backend.patenthelper.digital/filters/${id}`, {
         method: "DELETE",
       })
-        .then((res) => res.json())
-        .then((data) => {
+        .then((res) => {
           setUploaded((prev) => !prev);
           setLoading(false);
-        });
+        })
     };
     fetchData();
   };
